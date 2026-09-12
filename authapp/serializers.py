@@ -47,8 +47,13 @@ class LoginSerializer(serializers.Serializer):
         email = attrs.get('email', '').lower()
         password = attrs.get('password', '')
 
-        # Django's authenticate uses username; we map email → username
-        user = authenticate(username=email, password=password)
+        # We want to allow logging in via email, but Django's default User model
+        # authenticates via 'username'. We look up the User by email to get their username.
+        try:
+            user_obj = User.objects.get(email__iexact=email)
+            user = authenticate(username=user_obj.username, password=password)
+        except User.DoesNotExist:
+            user = None
 
         if not user:
             raise serializers.ValidationError(
