@@ -173,15 +173,13 @@ SIMPLE_JWT = {
 # Email Configuration
 # DIP: Views use send_mail() which delegates to this backend — swap backends
 #      by changing EMAIL_BACKEND here, never touching service or view code.
-# Change to 'django.core.mail.backends.smtp.EmailBackend' in production.
 # =============================================================================
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'noreply@livable.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER', 'noreply@livable.com')
 
-# For production SMTP, also set:
-# EMAIL_HOST = 'smtp.yourprovider.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'your@email.com'
-# EMAIL_HOST_PASSWORD = 'yourpassword'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
