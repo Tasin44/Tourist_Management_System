@@ -269,6 +269,10 @@ class FinancialProfile(AbstractTimestampedModel):
     stretched_housing_budget = models.CharField(max_length=100, blank=True, default="")
     monthly_living_budget_target = models.CharField(max_length=100, blank=True, default="")
 
+    share_your_opinion = models.TextField(blank=True, default="")
+    general_monthly_living_budget_target = models.TextField(blank=True, default="")
+    specific_codes_worried_about = models.TextField(blank=True, default="")
+
     financial_expectation = models.CharField(
         max_length=50, choices=FINANCIAL_EXPECTATION_CHOICES, blank=True, default=""
     )
