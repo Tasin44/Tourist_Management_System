@@ -1,0 +1,1070 @@
+{
+	"info": {
+		"_postman_id": "b3f07a4a-10f5-46b0-8c29-37f2a1b9c9d5",
+		"name": "Elizabeth / Livable App API",
+		"description": "Collection of all APIs for the Tourist Management System / Livable App. Make sure to set the `{{base_url}}` and `{{access_token}}` variables.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"yourpassword\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/logout/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Profile (Me)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/me/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"me",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"current_password\": \"oldpassword\",\n    \"new_password\": \"newpassword123\",\n    \"confirm_new_password\": \"newpassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/change-password/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"change-password",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Token Refresh",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/token/refresh/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"token",
+								"refresh",
+								""
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Clients (Admin & Portal)",
+			"item": [
+				{
+					"name": "Create Client (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"full_name\": \"John Doe\",\n    \"email\": \"johndoe@example.com\",\n    \"phone\": \"+1234567890\",\n    \"target_destination\": \"Lisbon\",\n    \"visa\": \"D7 Visa\",\n    \"target_arrival_timeline\": \"October 2026 Arrival\",\n    \"household_size\": \"2\",\n    \"lead_advisor_name\": \"Sarah Guide\",\n    \"notes\": \"Interested in food and culture.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/clients/create/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clients",
+								"create",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "List Clients (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/clients/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clients",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Client Dashboard (Client Portal)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/me/dashboard/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"me",
+								"dashboard",
+								""
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Trips",
+			"item": [
+				{
+					"name": "Create Trip for Client (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"city\": \"Porto\",\n    \"timeline\": \"Nov 12 - Nov 15, 2026\",\n    \"guide_name\": \"Anna\",\n    \"property_views\": 4\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/clients/:client_id/trips/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clients",
+								":client_id",
+								"trips",
+								""
+							],
+							"variable": [
+								{
+									"key": "client_id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get/Edit/Delete Specific Trip",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/clients/:client_id/trips/:trip_id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clients",
+								":client_id",
+								"trips",
+								":trip_id",
+								""
+							],
+							"variable": [
+								{
+									"key": "client_id",
+									"value": "1"
+								},
+								{
+									"key": "trip_id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "List All Trips (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/trips/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"trips",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "List Upcoming Trips (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/trips/upcoming/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"trips",
+								"upcoming",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "List Recent Trips (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/trips/recent/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"trips",
+								"recent",
+								""
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Anonymous Bookings",
+			"item": [
+				{
+					"name": "Create Anonymous Booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"full_name\": \"Jane Smith\",\n    \"email\": \"jane.smith@example.com\",\n    \"phone_number\": \"+1987654321\",\n    \"relocation_process_type\": \"just_exploring\",\n    \"considering_places_type\": \"lisbon_porto,not_sure\",\n    \"scouting_people_type\": \"just_me\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/anonymous/book/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"anonymous",
+								"book",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "List Anonymous Bookings (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/anonymous/book/list/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"anonymous",
+								"book",
+								"list",
+								""
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Financial & Lifestyle Profiles",
+			"item": [
+				{
+					"name": "Create/Update Financial Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"motivating_factors\": \"lower_costs,more_space,better_quality\",\n    \"comfortable_housing_budget\": \"2000\",\n    \"stretched_housing_budget\": \"2500\",\n    \"monthly_living_budget_target\": \"4000\",\n    \"financial_expectation\": \"maintain_lifestyle\",\n    \"income_route\": \"remote_employment\",\n    \"willing_tradeoffs\": \"housing_size,commute_time\",\n    \"practical_constraints\": \"pets,budget\",\n    \"financial_excitement_factors\": \"groceries,local_markets,public_transport\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/clients/:client_id/financial-profile/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clients",
+								":client_id",
+								"financial-profile",
+								""
+							],
+							"variable": [
+								{
+									"key": "client_id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Create/Update Lifestyle Alignment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"daily_life_desires\": \"walking,outdoors,cafes\",\n    \"good_weekday\": \"Wake up, go to a cafe, work, evening walk.\",\n    \"environmental_pull_factors\": \"outdoors,slower_pace,beautiful_environment\",\n    \"internal_pull_factors\": \"brave,exciting,ready_change\",\n    \"shadow_fear\": \"I'm afraid I won't make friends.\",\n    \"anchor_aspiration\": \"Buying fresh bread every morning.\",\n    \"success_picture\": \"Sitting on a balcony overlooking the city.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/clients/:client_id/lifestyle-alignment/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clients",
+								":client_id",
+								"lifestyle-alignment",
+								""
+							],
+							"variable": [
+								{
+									"key": "client_id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "6. Schedule (Admin & Client)",
+			"item": [
+				{
+					"name": "Create/Replace Day Schedule (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"date\": \"2026-09-11\",\n  \"items\": [\n    {\n      \"start_time\": \"09:00\",\n      \"end_time\": \"11:00\",\n      \"title\": \"Neighborhood Guide\",\n      \"item_type\": \"meeting\",\n      \"short_description\": \"Tour of the historical district.\",\n      \"description\": \"Detailed tour description here.\",\n      \"host_name\": \"Anna\",\n      \"meeting_point\": \"Main Square Cafe\",\n      \"what_to_bring\": \"Comfortable shoes\",\n      \"google_maps_link\": \"https://maps.google.com/\",\n      \"order\": 1\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/admin/today/:user_id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"today",
+								":user_id",
+								""
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Edit Specific Schedule Item (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"start_time\": \"09:30\",\n  \"title\": \"Updated Neighborhood Guide\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/admin/today/item/:item_id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"today",
+								"item",
+								":item_id",
+								""
+							],
+							"variable": [
+								{
+									"key": "item_id",
+									"value": "uuid-goes-here"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Today's Schedule (Client)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/app/today/?date=2026-09-11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"app",
+								"today",
+								""
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2026-09-11",
+									"description": "Optional, defaults to today's date if omitted"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "7. City Tests & Solo Micro-Tests (Admin & Client)",
+			"item": [
+				{
+					"name": "Create City Test (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"everyday-lunch\",\n  \"category\": \"food\",\n  \"title\": \"Everyday Lunch\",\n  \"short_description\": \"Menús del día are traditional set lunches...\",\n  \"google_maps_link\": \"https://maps.google.com/...\",\n  \"external_links\": [\n    {\n      \"label\": \"Verified Neighborhood Favorite\",\n      \"url\": \"https://...\"\n    }\n  ],\n  \"note_prompts\": [\n    \"Price...\",\n    \"Mostly locals...\",\n    \"Tried...\"\n  ],\n  \"question_prompts\": [\n    \"Typical price for this neighborhood?\",\n    \"Did we handle the tipping etiquette correctly?\"\n  ],\n  \"order\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/admin/city-tests/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"city-tests",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Update City Test (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Everyday Lunch (Updated)\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/admin/city-tests/:test_id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"city-tests",
+								":test_id",
+								""
+							],
+							"variable": [
+								{
+									"key": "test_id",
+									"value": "everyday-lunch"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "List All City Test Submissions (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/admin/city-tests/submissions/?category_id=food",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"city-tests",
+								"submissions",
+								""
+							],
+							"query": [
+								{
+									"key": "category_id",
+									"value": "food"
+								},
+								{
+									"key": "test_id",
+									"value": "everyday-lunch",
+									"disabled": true
+								},
+								{
+									"key": "user_id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get City Test Categories (Client)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/app/city-tests/categories/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"app",
+								"city-tests",
+								"categories",
+								""
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Category Detail (Client)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/app/city-tests/categories/:category_id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"app",
+								"city-tests",
+								"categories",
+								":category_id",
+								""
+							],
+							"variable": [
+								{
+									"key": "category_id",
+									"value": "food"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get City Test Detail (Client)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/app/city-tests/:test_id/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"app",
+								"city-tests",
+								":test_id",
+								""
+							],
+							"variable": [
+								{
+									"key": "test_id",
+									"value": "everyday-lunch"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Save City Test Submission (Client)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"notes\": \"Price was €13. Mostly locals. Tried the fish of the day.\",\n  \"question_for_liv_team\": \"Is tipping expected here?\",\n  \"links\": [\n    \"https://maps.google.com/...\"\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/app/city-tests/:test_id/save/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"app",
+								"city-tests",
+								":test_id",
+								"save",
+								""
+							],
+							"variable": [
+								{
+									"key": "test_id",
+									"value": "everyday-lunch"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Solo Micro-Tests (Client)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/app/solo-micro-tests/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"app",
+								"solo-micro-tests",
+								""
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000"
+		},
+		{
+			"key": "access_token",
+			"value": "YOUR_ACCESS_TOKEN_HERE"
+		},
+		{
+			"key": "refresh_token",
+			"value": "YOUR_REFRESH_TOKEN_HERE"
+		}
+	]
+}
