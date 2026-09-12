@@ -374,6 +374,11 @@ class LifestyleAlignmentSerializer(serializers.ModelSerializer):
             'success_picture',
             'desired_emotions',
             'glad_i_did_this_moment',
+            'routines_real_life',
+            'day_looked_like',
+            'anything_to_add',
+            'imagine_life_working',
+            'emotions_hope_to_feel',
             'created_at',
             'updated_at',
         ]

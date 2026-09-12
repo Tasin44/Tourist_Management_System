@@ -398,6 +398,12 @@ class LifestyleAlignment(AbstractTimestampedModel):
     desired_emotions = models.TextField(blank=True, default="")
     glad_i_did_this_moment = models.TextField(blank=True, default="")
 
+    routines_real_life = models.TextField(blank=True, default="")
+    day_looked_like = models.TextField(blank=True, default="")
+    anything_to_add = models.TextField(blank=True, default="")
+    imagine_life_working = models.TextField(blank=True, default="")
+    emotions_hope_to_feel = models.TextField(blank=True, default="")
+
     class Meta:
         verbose_name = "Lifestyle Alignment"
         verbose_name_plural = "Lifestyle Alignments"
