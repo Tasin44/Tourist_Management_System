@@ -311,6 +311,36 @@ class ClientDashboardView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class ClientMyTripsView(APIView):
+    """
+    GET /api/me/trips/
+
+    Returns a list of all trips belonging to the authenticated client,
+    plus a total count.
+
+    SRP — Only serves the client's own trip list.
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            client = request.user.client_profile
+        except Client.DoesNotExist:
+            return Response(
+                {"detail": "No client profile found for this user."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        trips = Trip.objects.filter(client=client).order_by('timeline')
+        serializer = TripReadSerializer(trips, many=True)
+        
+        return Response({
+            "total": trips.count(),
+            "trips": serializer.data
+        }, status=status.HTTP_200_OK)
+
+
 # =============================================================================
 # ANONYMOUS BOOKING
 # =============================================================================

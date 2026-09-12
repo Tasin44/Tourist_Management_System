@@ -36,6 +36,7 @@ from .views import (
     UpcomingTripsView,
     RecentTripsView,
     ClientDashboardView,
+    ClientMyTripsView,
     AnonymousBookingCreateView,
     AnonymousBookingListView,
     CreateFinancialProfileView,
@@ -66,6 +67,7 @@ urlpatterns = [
 
     # ── Client dashboard (client-facing) ─────────────────────────────────────
     path('me/dashboard/', ClientDashboardView.as_view(), name='client-dashboard'),
+    path('me/trips/', ClientMyTripsView.as_view(), name='client-my-trips'),
 
     # ── Anonymous booking ─────────────────────────────────────────────────────
     path('anonymous/book/', AnonymousBookingCreateView.as_view(), name='anonymous-book-create'),
