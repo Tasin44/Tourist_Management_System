@@ -104,6 +104,34 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         return value.lower()
 
 
+class ClientUpdateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for updating an existing Client.
+    """
+    image = serializers.ImageField(required=False, write_only=True)
+
+    class Meta:
+        model = Client
+        fields = [
+            'full_name',
+            'email',
+            'phone',
+            'target_destination',
+            'visa',
+            'target_arrival_timeline',
+            'household_size',
+            'lead_advisor_name',
+            'notes',
+            'image',
+        ]
+        
+    def validate_email(self, value: str) -> str:
+        # Check uniqueness excluding the current instance
+        if Client.objects.exclude(pk=self.instance.pk).filter(email=value).exists():
+            raise serializers.ValidationError("A client with this email already exists.")
+        return value.lower()
+
+
 class ClientReadSerializer(serializers.ModelSerializer):
     """
     Serializer for reading/listing Client records.
@@ -111,6 +139,8 @@ class ClientReadSerializer(serializers.ModelSerializer):
     SRP — Read-only representation. Create fields (notes, lead_advisor) are
           included but read-only here.
     """
+    
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = Client
@@ -125,10 +155,19 @@ class ClientReadSerializer(serializers.ModelSerializer):
             'household_size',
             'lead_advisor_name',
             'notes',
+            'image',
             'created_at',
             'updated_at',
         ]
         read_only_fields = fields
+
+    def get_image(self, obj):
+        if obj.user and hasattr(obj.user, 'profile') and obj.user.profile.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.user.profile.image.url)
+            return obj.user.profile.image.url
+        return None
 
 
 # =============================================================================

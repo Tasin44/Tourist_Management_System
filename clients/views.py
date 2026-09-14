@@ -29,11 +29,13 @@ from rest_framework.generics import (
 )
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 from .models import Client, Trip, AnonymousBooking, FinancialProfile, LifestyleAlignment
 from .serializers import (
     ClientCreateSerializer,
     ClientReadSerializer,
+    ClientUpdateSerializer,
     ClientDashboardSerializer,
     TripCreateSerializer,
     TripReadSerializer,
@@ -104,6 +106,48 @@ class ListClientsView(ListAPIView):
     permission_classes = [IsAdminUser]
     serializer_class = ClientReadSerializer
     queryset = Client.objects.select_related('user').order_by('-created_at')
+
+
+class AdminClientDetailView(RetrieveUpdateDestroyAPIView):
+    """
+    GET, PUT, PATCH, DELETE /api/clients/<client_id>/
+    
+    Admin endpoint to view, edit, or delete a client.
+    Supports multipart/form-data for updating the client image.
+    """
+    permission_classes = [IsAdminUser]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    queryset = Client.objects.all()
+    lookup_url_kwarg = 'client_id'
+
+    def get_serializer_class(self):
+        if self.request.method in ('PUT', 'PATCH'):
+            return ClientUpdateSerializer
+        return ClientReadSerializer
+        
+    def perform_update(self, serializer):
+        image = serializer.validated_data.pop('image', None)
+        client = serializer.save()
+        
+        if client.user:
+            # If email changed, try updating the user if one is linked
+            if client.email != client.user.email:
+                client.user.email = client.email
+                client.user.username = client.email
+                client.user.save()
+                
+            # If an image was uploaded, attach it to UserProfile
+            if image is not None:
+                from authapp.models import UserProfile
+                profile, _ = UserProfile.objects.get_or_create(user=client.user)
+                profile.image = image
+                profile.save()
+            
+    def perform_destroy(self, instance):
+        user = instance.user
+        instance.delete()
+        if user:
+            user.delete()
 
 
 class ClientTargetDestinationsView(APIView):
@@ -409,7 +453,7 @@ class ClientMyTripsView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        trips = Trip.objects.filter(client=client).order_by('timeline')
+        trips = Trip.objects.filter(client=client).order_by('-created_at')
         serializer = TripReadSerializer(trips, many=True)
         
         return Response({
