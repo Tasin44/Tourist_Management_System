@@ -360,6 +360,7 @@ class CityTestSubmission(AbstractTimestampedModel):
     links = models.JSONField(
         default=list,
         blank=True,
+        null=True,
         help_text='Array of URL strings the client wants to save.',
     )
     submitted_at = models.DateTimeField(auto_now=True)

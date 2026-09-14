@@ -527,9 +527,9 @@ class CityTestSubmissionWriteSerializer(serializers.ModelSerializer):
         model = CityTestSubmission
         fields = ['notes', 'question_for_liv_team', 'links']
         extra_kwargs = {
-            'notes': {'required': False},
-            'question_for_liv_team': {'required': False},
-            'links': {'required': False},
+            'notes': {'required': False, 'allow_blank': True},
+            'question_for_liv_team': {'required': False, 'allow_blank': True},
+            'links': {'required': False, 'allow_null': True},
         }
 
 
