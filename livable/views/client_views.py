@@ -323,6 +323,42 @@ class ClientSaveCityTestView(APIView):
         )
 
 
+class ClientSubmissionsView(APIView):
+    """
+    GET /api/app/city-tests/submissions/
+
+    Returns all city test submissions for the authenticated client.
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        client, err = get_client_from_request(request)
+        if err:
+            return err
+            
+        # We can reuse the admin serializer or create a client specific one.
+        # Since AdminSubmissionListSerializer works well for a flat list, we'll use it
+        # but we need to import it. Or just build a simple response.
+        submissions = CityTestSubmission.objects.filter(client=client).select_related('test', 'test__category').order_by('-submitted_at')
+        
+        # Build simple dict for client
+        data = []
+        for sub in submissions:
+            data.append({
+                "id": sub.id,
+                "test_id": sub.test_id,
+                "category_id": sub.test.category_id if sub.test else None,
+                "title": sub.test.title if sub.test else None,
+                "notes": sub.notes,
+                "question_for_liv_team": sub.question_for_liv_team,
+                "links": sub.links,
+                "submitted_at": sub.submitted_at
+            })
+            
+        return Response({"submissions": data}, status=status.HTTP_200_OK)
+
+
 # =============================================================================
 # SOLO DISCOVERY MICRO-TESTS — Client View
 # =============================================================================

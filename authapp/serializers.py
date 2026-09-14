@@ -80,10 +80,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     is_admin = serializers.SerializerMethodField()
     client_id = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'first_name', 'last_name', 'is_admin', 'client_id']
+        fields = ['id', 'email', 'first_name', 'last_name', 'image', 'is_admin', 'client_id']
         read_only_fields = fields
 
     def get_is_admin(self, obj) -> bool:
@@ -97,8 +98,42 @@ class UserProfileSerializer(serializers.ModelSerializer):
         """
         try:
             return obj.client_profile.pk
-        except Exception:
+        except AttributeError:
             return None
+
+    def get_image(self, obj):
+        if hasattr(obj, 'profile') and obj.profile.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.profile.image.url)
+            return obj.profile.image.url
+        return None
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for handling PATCH updates for user details.
+    """
+    image = serializers.ImageField(required=False)
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'image']
+        
+    def update(self, instance, validated_data):
+        image = validated_data.pop('image', None)
+        
+        # Update user fields
+        instance = super().update(instance, validated_data)
+        
+        # Update or create profile for image
+        if image is not None:
+            from .models import UserProfile
+            profile, _ = UserProfile.objects.get_or_create(user=instance)
+            profile.image = image
+            profile.save()
+            
+        return instance
 
 
 class ChangePasswordSerializer(serializers.Serializer):

@@ -249,19 +249,21 @@ class AdminScheduleItemView(APIView):
 
 class AdminCityTestListCreateView(APIView):
     """
+    GET  /api/admin/city-tests/
     POST /api/admin/city-tests/
 
-    Admin creates a new CityTest.
+    Admin gets all CityTests or creates a new CityTest.
 
-    SRP — Only handles creation. Update/delete are in AdminCityTestDetailView.
+    SRP — Only handles creation and listing. Update/delete are in AdminCityTestDetailView.
     OCP — New city test fields are added to AdminCityTestWriteSerializer only.
-
-    "Without OCP, adding a 'video_link' field to city tests would require editing
-     this view's POST body parsing AND the update view AND the read serializer —
-     a cascade of changes for one new field."
     """
 
     permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        tests = CityTest.objects.all().order_by('category', 'order')
+        serializer = AdminCityTestReadSerializer(tests, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = AdminCityTestWriteSerializer(data=request.data)

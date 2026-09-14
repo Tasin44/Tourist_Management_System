@@ -23,11 +23,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import (
     LoginSerializer,
     UserProfileSerializer,
+    UserUpdateSerializer,
     ChangePasswordSerializer,
 )
 
@@ -119,23 +121,27 @@ class LogoutView(APIView):
 class MeView(APIView):
     """
     GET /api/auth/me/
+    PATCH /api/auth/me/
 
-    Returns the authenticated user's profile including their client_id if
-    they are a client (for dashboard navigation).
-
-    SRP — Only returns profile data; does not handle updates.
-    ISP — Returns only what the client needs: id, email, name, is_admin, client_id.
-
-    "Without ISP, returning the full Django User model with all fields exposes
-     sensitive fields like last_login, password hash metadata, and is_superuser
-     to every frontend request."
+    Returns and updates the authenticated user's profile.
     """
 
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
 
     def get(self, request):
-        serializer = UserProfileSerializer(request.user)
+        # We pass request in context so the SerializerMethodField can build absolute URLs
+        serializer = UserProfileSerializer(request.user, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request):
+        serializer = UserUpdateSerializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            # Return the full updated profile representation
+            updated_serializer = UserProfileSerializer(request.user, context={'request': request})
+            return Response(updated_serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # =============================================================================

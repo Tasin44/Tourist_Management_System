@@ -47,6 +47,7 @@ from livable.views.client_views import (
     ClientCategoryDetailView,
     ClientCityTestDetailView,
     ClientSaveCityTestView,
+    ClientSubmissionsView,
     SoloMicroTestListView,
 )
 
@@ -93,6 +94,11 @@ urlpatterns = [
     ),
 
     # ── Client (PWA): City Tests ──────────────────────────────────────────────
+    path(
+        'app/city-tests/submissions/',
+        ClientSubmissionsView.as_view(),
+        name='client-submissions',
+    ),
     path(
         'app/city-tests/categories/',
         ClientCategoryListView.as_view(),

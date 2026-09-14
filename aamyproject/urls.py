@@ -11,6 +11,8 @@ SOLID PRINCIPLE APPLIED:
 
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # Django admin panel
@@ -25,3 +27,6 @@ urlpatterns = [
     # Livable app: today schedule, city tests, solo micro-tests
     path('api/', include('livable.urls', namespace='livable')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
