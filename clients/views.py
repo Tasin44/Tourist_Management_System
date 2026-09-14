@@ -46,6 +46,9 @@ from .serializers import (
 from .services import ClientCreationService
 from .permissions import IsAdminUser, IsAdminOrClientOwner
 
+from livable.models import CityTestSubmission, DailySchedule
+from livable.serializers import AdminSubmissionListSerializer, AdminDailyScheduleReadSerializer
+
 
 # =============================================================================
 # CLIENT ENDPOINTS
@@ -170,6 +173,44 @@ class CreateTripView(APIView):
                 {"detail": f"Client {client_id} not found."},
                 status=status.HTTP_404_NOT_FOUND,
             )
+
+
+class ClientTodaysView(ListAPIView):
+    """
+    GET /api/clients/{client_id}/todays/
+    
+    Lists all DailySchedules for a specific client.
+    Accessible by Admin or the specific Client.
+    """
+    permission_classes = [IsAdminOrClientOwner]
+    serializer_class = AdminDailyScheduleReadSerializer
+
+    def get_queryset(self):
+        return (
+            DailySchedule.objects
+            .filter(client_id=self.kwargs['client_id'])
+            .prefetch_related('items')
+            .order_by('-date')
+        )
+
+
+class ClientCityTestsView(ListAPIView):
+    """
+    GET /api/clients/{client_id}/city-tests/
+    
+    Lists all city tests submitted by a specific client.
+    Accessible by Admin or the specific Client.
+    """
+    permission_classes = [IsAdminOrClientOwner]
+    serializer_class = AdminSubmissionListSerializer
+
+    def get_queryset(self):
+        return (
+            CityTestSubmission.objects
+            .filter(client_id=self.kwargs['client_id'])
+            .select_related('test', 'test__category')
+            .order_by('-submitted_at')
+        )
 
 
 class ClientTripDetailView(RetrieveUpdateDestroyAPIView):

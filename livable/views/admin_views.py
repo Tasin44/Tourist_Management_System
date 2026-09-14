@@ -39,6 +39,7 @@ OOP APPLIED:
 from django.utils import timezone
 from django.db import transaction
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -53,6 +54,7 @@ from livable.models import (
 )
 from livable.serializers import (
     AdminDailyScheduleWriteSerializer,
+    AdminDailyScheduleReadSerializer,
     AdminScheduleItemWriteSerializer,
     AdminScheduleItemReadSerializer,
     AdminCityTestWriteSerializer,
@@ -114,6 +116,38 @@ def paginate_queryset(queryset, request, default_limit: int = 20):
 # =============================================================================
 # SCHEDULE / TODAY — Admin Views
 # =============================================================================
+
+class AdminTodaysListView(ListAPIView):
+    """
+    GET /api/admin/todays/
+    
+    Returns all daily schedules for all clients.
+    """
+    permission_classes = [IsAdminUser]
+    serializer_class = AdminDailyScheduleReadSerializer
+    queryset = DailySchedule.objects.prefetch_related('items').order_by('-date')
+
+
+class AdminTodayDetailView(APIView):
+    """
+    DELETE /api/admin/todays/{schedule_id}/
+    
+    Admin deletes an entire daily schedule.
+    """
+    permission_classes = [IsAdminUser]
+
+    def delete(self, request, schedule_id):
+        try:
+            schedule = DailySchedule.objects.get(id=schedule_id)
+        except DailySchedule.DoesNotExist:
+            return Response({"detail": "Schedule not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        schedule.delete()
+        return Response(
+            {"success": True, "message": "Daily schedule deleted."},
+            status=status.HTTP_200_OK
+        )
+
 
 class AdminTodayCreateView(APIView):
     """

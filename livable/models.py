@@ -152,6 +152,8 @@ class ScheduleItem(AbstractTimestampedModel):
     )
     end_time = models.CharField(
         max_length=5,
+        null=True,
+        blank=True,
         help_text="End time in HH:MM format, e.g. 11:00",
     )
 
@@ -292,6 +294,7 @@ class CityTest(AbstractTimestampedModel):
     )
 
     title = models.CharField(max_length=255)
+    city = models.CharField(max_length=100, blank=True, default="")
     short_description = models.TextField(blank=True, default="")
     google_maps_link  = models.URLField(blank=True, default="")
 

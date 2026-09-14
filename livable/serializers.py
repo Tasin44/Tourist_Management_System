@@ -89,7 +89,7 @@ class AdminScheduleItemWriteSerializer(serializers.ModelSerializer):
             # OCP: marking non-required fields here, not in the view
             field: {'required': False}
             for field in [
-                'short_description', 'description', 'host_name',
+                'end_time', 'short_description', 'description', 'host_name',
                 'meeting_point', 'what_to_bring', 'google_maps_link',
                 'restaurant_link', 'phone', 'website', 'reminder', 'order',
             ]
@@ -254,6 +254,36 @@ class AdminScheduleItemReadSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class AdminDailyScheduleReadSerializer(serializers.ModelSerializer):
+    """
+    Admin-facing full representation of a DailySchedule including its items.
+    """
+    client_id = serializers.IntegerField(source='client.id', read_only=True)
+    client_name = serializers.CharField(source='client.full_name', read_only=True)
+    client_email = serializers.CharField(source='client.email', read_only=True)
+    client_image = serializers.SerializerMethodField()
+    items_count = serializers.SerializerMethodField()
+    items = AdminScheduleItemReadSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = DailySchedule
+        fields = [
+            'id', 'date', 'client_id', 'client_name', 'client_email', 'client_image',
+            'items_count', 'items', 'created_at', 'updated_at'
+        ]
+
+    def get_items_count(self, obj):
+        return obj.items.count()
+
+    def get_client_image(self, obj):
+        if obj.client and obj.client.user and hasattr(obj.client.user, 'profile') and obj.client.user.profile.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.client.user.profile.image.url)
+            return obj.client.user.profile.image.url
+        return None
+
+
 # =============================================================================
 # SECTION 2: CITY TEST SERIALIZERS
 # =============================================================================
@@ -278,6 +308,7 @@ class AdminCityTestWriteSerializer(serializers.ModelSerializer):
             'id',
             'category',
             'title',
+            'city',
             'short_description',
             'google_maps_link',
             'external_links',
@@ -311,6 +342,7 @@ class AdminCityTestReadSerializer(serializers.ModelSerializer):
             'id',
             'category_id',
             'title',
+            'city',
             'short_description',
             'google_maps_link',
             'external_links',
@@ -449,6 +481,7 @@ class ClientCityTestDetailSerializer(serializers.ModelSerializer):
             'id',
             'category_id',
             'title',
+            'city',
             'short_description',
             'google_maps_link',
             'external_links',

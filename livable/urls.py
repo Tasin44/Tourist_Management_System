@@ -35,6 +35,8 @@ Full URL Map:
 from django.urls import path
 
 from livable.views.admin_views import (
+    AdminTodaysListView,
+    AdminTodayDetailView,
     AdminTodayCreateView,
     AdminScheduleItemView,
     AdminCityTestListCreateView,
@@ -55,6 +57,16 @@ app_name = 'livable'
 
 urlpatterns = [
     # ── Admin: Schedule ───────────────────────────────────────────────────────
+    path(
+        'admin/todays/',
+        AdminTodaysListView.as_view(),
+        name='admin-todays-list',
+    ),
+    path(
+        'admin/todays/<int:schedule_id>/',
+        AdminTodayDetailView.as_view(),
+        name='admin-today-detail',
+    ),
     path(
         'admin/today/<int:user_id>/',
         AdminTodayCreateView.as_view(),
