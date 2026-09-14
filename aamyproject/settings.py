@@ -35,6 +35,9 @@ ALLOWED_HOSTS = ['10.10.29.34', '127.0.0.1', 'localhost']
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:3001',
+    'https://livable-pwa.vercel.app',
+    'https://livable-admin.vercel.app',
+    'https://livable-web.vercel.app',
 ]
 
 
