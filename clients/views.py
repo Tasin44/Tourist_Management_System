@@ -103,6 +103,28 @@ class ListClientsView(ListAPIView):
     queryset = Client.objects.select_related('user').order_by('-created_at')
 
 
+class ClientTargetDestinationsView(APIView):
+    """
+    GET /api/clients/target_destination/
+
+    Returns a distinct list of all target destinations from all clients.
+    """
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        destinations = (
+            Client.objects
+            .exclude(target_destination='')
+            .exclude(target_destination__isnull=True)
+            .values_list('target_destination', flat=True)
+            .distinct()
+            .order_by('target_destination')
+        )
+        return Response({
+            "target_destinations": list(destinations)
+        }, status=status.HTTP_200_OK)
+
+
 # =============================================================================
 # TRIP ENDPOINTS
 # =============================================================================

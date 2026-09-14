@@ -30,6 +30,7 @@ from django.urls import path
 from .views import (
     CreateClientView,
     ListClientsView,
+    ClientTargetDestinationsView,
     CreateTripView,
     ClientTripDetailView,
     ListAllTripsView,
@@ -49,6 +50,7 @@ urlpatterns = [
     # ── Client endpoints ──────────────────────────────────────────────────────
     path('clients/create/', CreateClientView.as_view(), name='create-client'),
     path('clients/', ListClientsView.as_view(), name='list-clients'),
+    path('clients/target_destination/', ClientTargetDestinationsView.as_view(), name='target-destinations'),
 
     # ── Trip endpoints ────────────────────────────────────────────────────────
     path(
