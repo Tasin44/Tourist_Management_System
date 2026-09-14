@@ -165,11 +165,15 @@ class TripReadSerializer(serializers.ModelSerializer):
     client_name = serializers.CharField(source='client.full_name', read_only=True)
     email = serializers.EmailField(source='client.email', read_only=True)
     visa = serializers.CharField(source='client.visa', read_only=True)
+    client_id = serializers.IntegerField(source='client.id', read_only=True)
+    tour_id = serializers.IntegerField(source='id', read_only=True)
 
     class Meta:
         model = Trip
         fields = [
             'id',
+            'tour_id',
+            'client_id',
             'client_name',
             'email',
             'visa',
