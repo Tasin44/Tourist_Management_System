@@ -227,6 +227,20 @@ class ListAllTripsView(ListAPIView):
             .order_by('-created_at')
         )
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        
+        from .models import Client
+        total_clients = Client.objects.count()
+        total_trips = queryset.count()
+        
+        return Response({
+            "total_clients": total_clients,
+            "total_trips": total_trips,
+            "trips": serializer.data
+        })
+
 
 class UpcomingTripsView(ListAPIView):
     """
