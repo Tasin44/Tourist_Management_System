@@ -30,7 +30,11 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'default-insecure-key-if-not-found')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['10.10.29.34', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['10.10.29.34', '127.0.0.1', 'localhost', '.devtunnels.ms', '6zpmb4x8-8061.inc1.devtunnels.ms']
+
+# Allow Django to build absolute URIs correctly when running behind a proxy like devtunnels/ngrok
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
